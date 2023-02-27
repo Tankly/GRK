@@ -1,0 +1,8 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: Katalog pośredni (Debug\) zawiera pliki udostępnione z innego projektu (grk-cw3.vcxproj, grk-cw4.vcxproj, grk-cw5.vcxproj, grk-cw6.vcxproj). Może to spowodować niepoprawne zachowanie podczas oczyszczania i ponownej kompilacji.
+Box.obj : warning LNK4075: zignorowano opcję „/EDITANDCONTINUE” z powodu określenia opcji „/INCREMENTAL:NO”
+LINK : warning LNK4098: domyślna biblioteka „MSVCRT” powoduje konflikt z innymi bibliotekami; użyj opcji /NODEFAULTLIB:biblioteka
+  LINK : konsolidator 32-bitowy (C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x86\link.exe) nie może wykonać operacji We/Wy pliku mapowanego na pamięć na elemencie „Debug\Texture.obj” i ponowne uruchomi konsolidowanie za pomocą konsolidatora 64-bitowego w celu zwiększenia przepływności
+  LINK : ponowne uruchamianie konsolidowania za pomocą konsolidatora 64-bitowego „C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX64\x86\link.exe”
+Box.obj : warning LNK4075: zignorowano opcję "/EDITANDCONTINUE" z powodu określenia opcji "/INCREMENTAL:NO"
+LINK : warning LNK4098: domyślna biblioteka "MSVCRT" powoduje konflikt z innymi bibliotekami; użyj opcji /NODEFAULTLIB:biblioteka
+  grk-cw7.vcxproj -> C:\studia UAM\5 sem\graficzq\Debug\grk-cw7.exe

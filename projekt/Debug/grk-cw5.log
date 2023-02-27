@@ -1,0 +1,3 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(491,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (grk-cw3.vcxproj, grk-cw4.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Using triplet "x86-windows" from "C:\Users\Andrzej\Desktop\openvdb\vcpkg\installed\x86-windows\"
+  grk-cw5.vcxproj -> C:\Users\Andrzej\Desktop\grk\2021\grk glfw test\Debug\grk-cw5.exe
