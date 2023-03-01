@@ -7,6 +7,8 @@ namespace models
 	Core::RenderContext skybox;
 	Core::RenderContext ground;
 	Core::RenderContext spaceship;
+	Core::RenderContext honda;
+	Core::RenderContext lamp;
 }
 
 namespace textures
@@ -14,6 +16,8 @@ namespace textures
 	GLuint skybox;
 	GLuint ground;
 	GLuint spaceship;
+	GLuint honda;
+	GLuint lamp;
 }
 
 void loadModelToContext(std::string path, Core::RenderContext& context)
@@ -73,7 +77,16 @@ void loadGround() {
 
 void loadSpaceship() {
 	loadModelToContext("./models/spaceship.obj", models::spaceship);
-	textures::spaceship = Core::LoadTexture("textures/ground.png");
+	//textures::spaceship = Core::LoadTexture("textures/ground.png");
+}
+
+void loadHonda() {
+	loadModelToContext("./models/Sol_Gauntlet_GRS_Rally.obj", models::honda);
+	//textures::honda = Core::LoadTexture("textures/ground.png");
+}
+void loadLamp() {
+	loadModelToContext("./models/street_lamp.obj", models::lamp);
+	//textures::honda = Core::LoadTexture("textures/ground.png");
 }
 
 void initLoadModels()
@@ -81,4 +94,6 @@ void initLoadModels()
 	loadSkybox();
 	loadGround();
 	loadSpaceship();
+	loadHonda();
+	loadLamp();
 }
