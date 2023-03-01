@@ -141,6 +141,26 @@ void renderScene(GLFWwindow* window)
 		glm::translate(spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()),
 		glm::vec3(0.5, 0.5, 0.5)
 	);
+	drawObjectColor(models::honda,
+		glm::translate(glm::vec3(1.f, 2.f, 0)),
+		glm::vec3(0.5, 0.5, 0.5)
+	);
+	drawObjectColor(models::lamp,
+		glm::translate(glm::vec3(3.f, 0, 1.f)),
+		glm::vec3(0.5, 0.5, 0.5)
+	);
+	drawObjectColor(models::lamp,
+		glm::translate(glm::vec3(3.f, 0, 3.f)),
+		glm::vec3(0.5, 0.5, 0.5)
+	);
+	drawObjectColor(models::lamp,
+		glm::translate(glm::vec3(3.f, 0, 5.f)),
+		glm::vec3(0.5, 0.5, 0.5)
+	);
+	drawObjectColor(models::lamp,
+		glm::translate(glm::vec3(3.f, 0, 7.f)),
+		glm::vec3(0.5, 0.5, 0.5)
+	);
 
 	glUseProgram(0);
 	glfwSwapBuffers(window);
@@ -174,8 +194,8 @@ void processInput(GLFWwindow* window)
 {
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::vec3(0.f, 1.f, 0.f);
-	float angleSpeed = 0.005f;
-	float moveSpeed = 0.005f;
+	float angleSpeed = 0.05f;
+	float moveSpeed = 0.05f;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
