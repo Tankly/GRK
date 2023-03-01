@@ -31,6 +31,16 @@ glm::vec3 cameraDir = glm::vec3(1.f, 0.f, 0.f);
 
 glm::vec3 spaceshipPos = glm::vec3(-4.f, 0, 0);
 glm::vec3 spaceshipDir = glm::vec3(1.f, 0.f, 0.f);
+
+glm::vec3 lightPos = glm::vec3(0, 10, 0);
+glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8);
+
+glm::vec3 spotlightPos = glm::vec3(0, 0, 0);
+glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
+glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8) * 10;
+
+float spotlightPhi = 3.14 / 4;
+
 GLuint VAO,VBO;
 GLuint quadVAO;
 
@@ -92,8 +102,13 @@ void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::v
 	glUniformMatrix4fv(glGetUniformLocation(program, "transformation"), 1, GL_FALSE, (float*)&transformation);
 	glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"), 1, GL_FALSE, (float*)&modelMatrix);
 	glUniform3f(glGetUniformLocation(program, "modelColor"), color.x, color.y, color.z);	
-	glUniform3f(glGetUniformLocation(program, "lightColor"), 1,1,1);
-	glUniform3f(glGetUniformLocation(program, "lightPos"), 0, 0, 0);
+	glUniform3f(glGetUniformLocation(program, "lightColor"), lightColor.x, lightColor.y, lightColor.z);
+	glUniform3f(glGetUniformLocation(program, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+
+	glUniform3f(glGetUniformLocation(program, "spotlightConeDir"), spotlightConeDir.x, spotlightConeDir.y, spotlightConeDir.z);
+	glUniform3f(glGetUniformLocation(program, "spotlightPos"), spotlightPos.x, spotlightPos.y, spotlightPos.z);
+	glUniform3f(glGetUniformLocation(program, "spotlightColor"), spotlightColor.x, spotlightColor.y, spotlightColor.z);
+	glUniform1f(glGetUniformLocation(program, "spotlightPhi"), spotlightPhi);
 
 	Core::DrawContext(context);
 }
@@ -162,6 +177,9 @@ void renderScene(GLFWwindow* window)
 		glm::vec3(0.5, 0.5, 0.5)
 	);
 
+	spotlightPos = spaceshipPos + 0.2 * spaceshipDir;
+	spotlightConeDir = spaceshipDir;
+
 	glUseProgram(0);
 	glfwSwapBuffers(window);
 }
@@ -194,8 +212,8 @@ void processInput(GLFWwindow* window)
 {
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::vec3(0.f, 1.f, 0.f);
-	float angleSpeed = 0.05f;
-	float moveSpeed = 0.05f;
+	float angleSpeed = 0.005f;
+	float moveSpeed = 0.005f;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
