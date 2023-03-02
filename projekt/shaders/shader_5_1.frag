@@ -56,11 +56,12 @@ void main()
     //SPACESHIP LIGHTS
     vec3 spotlightDir= normalize(spotlightPos-worldPos);
 	float angleAtenuation = clamp((dot(-spotlightDir,spotlightConeDir)-0.8)*3,0,1);
-    lColor = spotlightColor/pow(length(spotlightPos-worldPos),2)*angleAtenuation;
+    float distanceFromSpaceshipLight = length(spotlightPos-worldPos);
+    lColor = spotlightColor/pow(distanceFromSpaceshipLight,2)*angleAtenuation;
 	ilumination+=phongLight(normalize(spotlightDir),lColor,vNormal,viewDir)*modelColor;
 
     //WORLD
-    lColor = lightColor/(distanceFromLight*distanceFromLight);
+    lColor = lightColor/pow(distanceFromLight,2);
     //wektor kierunku miedzy zrodlem swiatla a pozycja fragmentu
     vec3 lightDir = normalize(lightPos - worldPos);
     //Otaczajace swiatlo

@@ -37,7 +37,8 @@ glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8);
 
 glm::vec3 spotlightPos = glm::vec3(0, 0, 0);
 glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
-glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8) * 10;
+// 2 - moc œwiat³a
+glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8) * 2;
 
 float spotlightPhi = 3.14 / 4;
 
