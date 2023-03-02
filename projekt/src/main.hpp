@@ -22,6 +22,7 @@
 GLuint program;
 GLuint programTex;
 GLuint programSkybox;
+GLuint programSpecTexture;
 
 Core::Shader_Loader shaderLoader;
 Core::RenderContext shipContext;
@@ -40,7 +41,6 @@ glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
 // 2 - moc œwiat³a
 glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8) * 2;
 
-float spotlightPhi = 3.14 / 4;
 
 GLuint VAO,VBO;
 GLuint quadVAO;
@@ -85,16 +85,33 @@ glm::mat4 createPerspectiveMatrix()
 }
 
 
-/*void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint textureID) {
+void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint textureID) {
 	glUseProgram(programTex);
 	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
 	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
-	glUniformMatrix4fv(glGetUniformLocation(program, "transformation"), 1, GL_FALSE, (float*)&transformation);
-	glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"), 1, GL_FALSE, (float*)&modelMatrix);
-	glUniform3f(glGetUniformLocation(program, "lightPos"), 0, 0, 0);
+	glUniformMatrix4fv(glGetUniformLocation(programTex, "transformation"), 1, GL_FALSE, (float*)&transformation);
+	glUniformMatrix4fv(glGetUniformLocation(programTex, "modelMatrix"), 1, GL_FALSE, (float*)&modelMatrix);
+	glUniform3f(glGetUniformLocation(programTex, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+
+	glUniform3f(glGetUniformLocation(program, "spotlightConeDir"), spotlightConeDir.x, spotlightConeDir.y, spotlightConeDir.z);
+	glUniform3f(glGetUniformLocation(program, "spotlightPos"), spotlightPos.x, spotlightPos.y, spotlightPos.z);
+	glUniform3f(glGetUniformLocation(program, "spotlightColor"), spotlightColor.x, spotlightColor.y, spotlightColor.z);
 	Core::SetActiveTexture(textureID, "colorTexture", programTex, 0);
 	Core::DrawContext(context);
-}*/
+}
+
+void drawObject(Core::RenderContext context, glm::mat4 modelMatrix)
+{
+	glUseProgram(programSpecTexture);
+	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
+	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
+
+
+	glUniformMatrix4fv(glGetUniformLocation(programSpecTexture, "modelMatrix"), 1, GL_FALSE, (float*)&modelMatrix);
+	glUniformMatrix4fv(glGetUniformLocation(programSpecTexture, "transformation"), 1, GL_FALSE, (float*)&transformation);
+	Core::DrawContext(context);
+}
+
 
 void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::vec3 color) {
 	glUseProgram(program);
@@ -109,7 +126,6 @@ void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::v
 	glUniform3f(glGetUniformLocation(program, "spotlightConeDir"), spotlightConeDir.x, spotlightConeDir.y, spotlightConeDir.z);
 	glUniform3f(glGetUniformLocation(program, "spotlightPos"), spotlightPos.x, spotlightPos.y, spotlightPos.z);
 	glUniform3f(glGetUniformLocation(program, "spotlightColor"), spotlightColor.x, spotlightColor.y, spotlightColor.z);
-	glUniform1f(glGetUniformLocation(program, "spotlightPhi"), spotlightPhi);
 
 	Core::DrawContext(context);
 }
@@ -149,21 +165,21 @@ void renderScene(GLFWwindow* window)
 		glm::translate(spaceshipPos) * glm::eulerAngleY(glm::pi<float>()),
 		textures::skybox
 	);
-	drawObjectColor(models::ground,
+	drawObjectTexture(models::ground,
 		glm::mat4(),
-		glm::vec3(1.0, 1.0, 0.3)
+		textures::ground
 	);
-	drawObjectColor(models::spaceship,
+	drawObjectTexture(models::spaceship,
 		glm::translate(spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()),
-		glm::vec3(0.5, 0.5, 0.5)
+		textures::spaceship
 	);
 	drawObjectColor(models::honda,
 		glm::translate(glm::vec3(1.f, 2.f, 0)),
 		glm::vec3(0.5, 0.5, 0.5)
 	);
-	drawObjectColor(models::lamp,
+	drawObjectTexture(models::lamp,
 		glm::translate(glm::vec3(3.f, 0, 1.f)),
-		glm::vec3(0.5, 0.5, 0.5)
+		textures::lamp
 	);
 	drawObjectColor(models::lamp,
 		glm::translate(glm::vec3(3.f, 0, 3.f)),
@@ -196,9 +212,10 @@ void init(GLFWwindow* window)
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glEnable(GL_DEPTH_TEST);
-	program = shaderLoader.CreateProgram("shaders/shader_5_1.vert", "shaders/shader_5_1.frag");
-	//programTex = shaderLoader.CreateProgram("shaders/shader_5_1_tex.vert", "shaders/shader_5_1_tex.frag");
-	programSkybox = shaderLoader.CreateProgram("shaders/shader_skybox.vert", "shaders/shader_skybox.frag");
+	program = shaderLoader.CreateProgram("shaders/main_shader.vert", "shaders/main_shader.frag");
+	programTex = shaderLoader.CreateProgram("shaders/texture_shader.vert", "shaders/texture_shader.frag");
+	programSpecTexture = shaderLoader.CreateProgram("shaders/lamp_shader.vert", "shaders/lamp_shader.frag");
+	programSkybox = shaderLoader.CreateProgram("shaders/skybox_shader.vert", "shaders/skybox_shader.frag");
 
 	initLoadModels();
 }
