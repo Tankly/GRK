@@ -8,23 +8,16 @@ layout(location = 4) in vec3 vertexBitangent;
 
 uniform mat4 transformation;
 uniform mat4 modelMatrix;
-uniform vec3 lightPos;
-uniform vec3 cameraPos;
 
 out vec3 vecNormal;
 out vec3 worldPos;
 out vec2 vecTex;
-out float distanceFromLight;
 
 void main()
 {
 	worldPos = (modelMatrix* vec4(vertexPosition,1)).xyz;
 	vecNormal = (modelMatrix* vec4(vertexNormal,0)).xyz;
-
-	distanceFromLight = length(lightPos-worldPos);
-
 	vecTex = vertexTexCoord;
 	vecTex.y = 1.0 - vecTex.y;
-
 	gl_Position = transformation * vec4(vertexPosition, 1.0);
 }
