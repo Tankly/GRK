@@ -19,6 +19,8 @@ namespace textures
 	GLuint honda;
 	GLuint lamp;
 	GLuint clouds;
+	GLuint normals_spaceship;
+	GLuint normals_default;
 }
 
 void loadModelToContext(std::string path, Core::RenderContext& context)
@@ -79,6 +81,10 @@ void loadGround() {
 void loadSpaceship() {
 	loadModelToContext("./models/spaceship.obj", models::spaceship);
 	textures::spaceship = Core::LoadTexture("textures/carbon.jpeg");
+	textures::normals_spaceship = Core::LoadTexture("textures/normals/test_normals.png");
+}
+void loadDefault() {
+	textures::normals_default = Core::LoadTexture("textures/normals/default_normals.jpg");
 }
 
 void loadHonda() {
@@ -98,4 +104,5 @@ void initLoadModels()
 	loadSpaceship();
 	loadHonda();
 	loadLamp();
+	loadDefault();
 }

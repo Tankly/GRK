@@ -85,7 +85,7 @@ glm::mat4 createPerspectiveMatrix()
 }
 
 
-void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint textureID) {
+void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint textureID, GLuint normalmapId = NULL) {
 	glUseProgram(programTex);
 	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
 	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
@@ -98,7 +98,14 @@ void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLui
 	glUniform3f(glGetUniformLocation(programTex, "spotlightPos"), spotlightPos.x, spotlightPos.y, spotlightPos.z);
 	glUniform3f(glGetUniformLocation(programTex, "spotlightColor"), spotlightColor.x, spotlightColor.y, spotlightColor.z);
 	Core::SetActiveTexture(textureID, "colorTexture", programTex, 0);
+	if(normalmapId)  {
+		Core::SetActiveTexture(normalmapId, "normalSampler", programTex, 1);
+	}
+	else {
+		Core::SetActiveTexture(textures::normals_default, "normalSampler", programTex, 1);
+	}
 	Core::DrawContext(context);
+	glUseProgram(0);
 }
 
 void drawObject(Core::RenderContext context, glm::mat4 modelMatrix)
@@ -172,7 +179,8 @@ void renderScene(GLFWwindow* window)
 	);
 	drawObjectTexture(models::spaceship,
 		glm::translate(spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()),
-		textures::spaceship
+		textures::spaceship,
+		textures::normals_spaceship
 	);
 	drawObjectColor(models::honda,
 		glm::translate(glm::vec3(1.f, 2.f, 0)),

@@ -3,7 +3,6 @@
 out vec4 out_color;
 
 uniform vec3 lightColor;
-uniform vec3 lightPos;
 //pozycja kamery
 uniform vec3 cameraPos;
 
@@ -12,14 +11,23 @@ uniform vec3 spotlightColor;
 uniform vec3 spotlightConeDir;
 
 uniform sampler2D colorTexture;
+//normal map
+uniform sampler2D normalSampler;
 in vec2 vecTex;
 
 //rzeczywista pozycja fragmentu
 in vec3 worldPos;
+
+in vec3 spotlightDir;
 //wektor prostopadly do powierzchni wierzcholka
 in vec3 vecNormal;
 //odległość fragmentu od światła
 in float distanceFromLight;
+
+//wektor kierunku widoku/ kierunek
+in vec3 viewDirTS;
+in vec3 lightDirTS;
+in vec3 spotlightDirTS;
 
 //jak bardzo domyslnie widoczne sa elementy
 const float AMBIENT_STRENGTH = 0.05;
@@ -48,33 +56,32 @@ vec3 phongLight(vec3 lightDir, vec3 lightColor, vec3 vNormal,vec3 viewDir){
 
 void main()
 {
+    vec3 normal = vec3(0,0,1);
     //oświetlenie
     vec3 ilumination;
     //kolor światła
     vec3 lColor;
 
     vec3 textureColor = texture2D(colorTexture, vecTex*20).xyz;
-
-     //wektor kierunku widoku/ kierunek patrzenia
-    vec3 viewDir = normalize(cameraPos - worldPos);
+    normal = texture2D(normalSampler, vecTex*20).xyz;
+    //przekształcenie na [−1,1]
+    normal = normalize(normal*2-1);
 
     //SPACESHIP LIGHTS
     vec3 spotlightDir= normalize(spotlightPos-worldPos);
 	float angleAtenuation = clamp((dot(-spotlightDir,spotlightConeDir)-0.8)*3,0,1);
     float distanceFromSpaceshipLight = length(spotlightPos-worldPos);
     lColor = spotlightColor/pow(distanceFromSpaceshipLight,2)*angleAtenuation;
-	ilumination+=phongLight(normalize(spotlightDir),lColor,vecNormal,viewDir)*textureColor;
+	ilumination+=phongLight(spotlightDirTS,lColor,normal,viewDirTS)*textureColor;
 
     //WORLD
     lColor = lightColor/pow(distanceFromLight,2);
-    //wektor kierunku miedzy zrodlem swiatla a pozycja fragmentu
-    vec3 lightDir = normalize(lightPos - worldPos);
     //Otaczajace swiatlo
     vec3 ambient = AMBIENT_STRENGTH * lightColor;
 
     //Mieszany Phong - wszystkie opcje
-    ilumination += (phongLight(lightDir,lColor,vecNormal,viewDir)) * textureColor;
+    ilumination += (phongLight(lightDirTS,lColor,normal,viewDirTS)) * textureColor;
     //Tone mapping - Osłabienia światła przy większej odległośći
     vec3 toneMappingColor = 1.0 - exp(-ilumination*EXPOSITION);
-	out_color = vec4(toneMappingColor+(ambient* textureColor),1);
+	out_color = vec4((toneMappingColor+(ambient* textureColor)),1);
 }
