@@ -148,4 +148,5 @@ void initLoadModels()
 	loadHonda();
 	loadLamp();
 	loadDefault();
+	loadTree();
 }

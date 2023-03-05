@@ -28,10 +28,10 @@ GLuint programPBR;
 Core::Shader_Loader shaderLoader;
 Core::RenderContext shipContext;
 
-glm::vec3 cameraPos = glm::vec3(0, 0.4f, 0);
+glm::vec3 cameraPos = glm::vec3(0, 0, 0);
 glm::vec3 cameraDir = glm::vec3(1.f, 0.f, 0.f);
 
-glm::vec3 spaceshipPos = glm::vec3(0, 0.4f, 0);
+glm::vec3 spaceshipPos = glm::vec3(0, 0, 0);
 glm::vec3 spaceshipDir = glm::vec3(1.f, 0.f, 0.f);
 
 glm::vec3 lightPositions[20];
@@ -204,7 +204,7 @@ void renderScene(GLFWwindow* window)
 		localsSpeed = -100;
 	}
 
-	localsSpeed += 0.2;
+	localsSpeed += 0;
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, spaceshipDir));
@@ -240,11 +240,6 @@ void renderScene(GLFWwindow* window)
 		textures::honda,
 		texturesNormal::spaceship
 	);
-	drawObjectTexture(models::tree,
-		glm::translate(glm::vec3(1.f, 0, 0)),
-		textures::tree,
-		texturesNormal::spaceship
-	);
 	const float wallWidth = 8.f;
 	for (int i = -3; i <= 3; i++) {
 		drawObjectPBR(models::wall,
@@ -276,10 +271,10 @@ void renderScene(GLFWwindow* window)
 
 		lightConeDir[positionIndex] = glm::vec4(1.f, 0.f, 0.f, 0.f) * glm::eulerAngleXYZ(0.5f, 3.f, -1.5f);
 		positionIndex++;
-		/*drawObjectTexture(models::tree,
+		drawObjectTexture(models::tree,
 			glm::translate(glm::vec3(-2.f, 0, lampGap * i)) * glm::eulerAngleY(3.f),
 			textures::tree
-		);*/
+		);
 
 	}
 	spotlightPos = spaceshipPos + glm::vec3(0, 1, 0) + 0.3 * spaceshipDir;
