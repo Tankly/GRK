@@ -11,6 +11,7 @@ uniform mat4 modelMatrix;
 uniform vec3 lightPos[20];
 uniform vec3 lightConeDir[20];
 uniform vec3 spotlightPos;
+uniform vec3 spotlightPosLocals;
 uniform vec3 cameraPos;
 
 out vec3 vecNormal;
@@ -20,6 +21,7 @@ out vec2 vecTex;
 out vec3 viewDirTS;
 out vec3 lightDirTS[20];
 out vec3 spotlightDirTS;
+out vec3 spotlightDirTSLocals;
 
 void main()
 {
@@ -30,7 +32,7 @@ void main()
 	vecTex.y = 1.0 - vecTex.y;
 
 	gl_Position = transformation * vec4(vertexPosition, 1.0);
-	//do przestrzeni œwiata
+	//do przestrzeni ï¿½wiata
 	vec3 worldTangent = normalize(mat3(modelMatrix)*vertexTangent);
 	vec3 worldBitangent = normalize(mat3(modelMatrix)*vertexBitangent);
 
@@ -45,7 +47,9 @@ void main()
     vec3 viewDir = normalize(cameraPos - worldPos);
 	//wektor kierunku miedzy statkiem a pozycja fragmentu
 	vec3 spotlightDir = normalize(spotlightPos-worldPos);
+	vec3 spotlightDirLocals = normalize(spotlightPosLocals-worldPos);
 	//przeniesienie do przestrzeni stycznych
 	spotlightDirTS = normalize(TBN*spotlightDir);
 	viewDirTS = normalize(TBN*viewDir);
+	spotlightDirTSLocals = normalize(TBN*spotlightDirLocals);
 }

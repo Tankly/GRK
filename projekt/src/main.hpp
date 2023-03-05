@@ -40,14 +40,20 @@ glm::vec3 lightColor = glm::vec3(1, 1, 0.8)*0.3;
 
 glm::vec3 spotlightPos = glm::vec3(0, 0, 0);
 glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
-// 0.5 - moc œwiat³a
+
+glm::vec3 spotlightPosLocals = glm::vec3(0, 0, 0);
+glm::vec3 spotlightConeDirLocals = glm::vec3(0, 0, 0);
+
+// 2 - moc ï¿½wiatï¿½a
 glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8)*0.5;
+glm::vec3 spotlightColorLocals = glm::vec3(0.5, 0.9, 0.8) * 2;
 
 
 GLuint VAO,VBO;
 GLuint quadVAO;
 
 float aspectRatio = 1.f;
+float localsSpeed = 0;
 
 glm::mat4 createCameraMatrix()
 {
@@ -111,6 +117,10 @@ void drawObjectPBR(
 	glUniform3f(glGetUniformLocation(programPBR, "spotlightPos"), spotlightPos.x, spotlightPos.y, spotlightPos.z);
 	glUniform3f(glGetUniformLocation(programPBR, "spotlightColor"), spotlightColor.x, spotlightColor.y, spotlightColor.z);
 
+	glUniform3f(glGetUniformLocation(programTex, "spotlightConeDirLocals"), spotlightConeDirLocals.x, spotlightConeDirLocals.y, spotlightConeDirLocals.z);
+	glUniform3f(glGetUniformLocation(programTex, "spotlightPosLocals"), spotlightPosLocals.x, spotlightPosLocals.y, spotlightPosLocals.z);
+	glUniform3f(glGetUniformLocation(programTex, "spotlightColorLocals"), spotlightColorLocals.x, spotlightColorLocals.y, spotlightColorLocals.z);
+
 	Core::SetActiveTexture(textureID, "albedoMap", programPBR, 0);
 	if (normalmapId) {
 		Core::SetActiveTexture(normalmapId, "normalMap", programPBR, 1);
@@ -141,6 +151,11 @@ void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLui
 	glUniform3f(glGetUniformLocation(programTex, "spotlightConeDir"), spotlightConeDir.x, spotlightConeDir.y, spotlightConeDir.z);
 	glUniform3f(glGetUniformLocation(programTex, "spotlightPos"), spotlightPos.x, spotlightPos.y, spotlightPos.z);
 	glUniform3f(glGetUniformLocation(programTex, "spotlightColor"), spotlightColor.x, spotlightColor.y, spotlightColor.z);
+
+	glUniform3f(glGetUniformLocation(programTex, "spotlightConeDirLocals"), spotlightConeDirLocals.x, spotlightConeDirLocals.y, spotlightConeDirLocals.z);
+	glUniform3f(glGetUniformLocation(programTex, "spotlightPosLocals"), spotlightPosLocals.x, spotlightPosLocals.y, spotlightPosLocals.z);
+	glUniform3f(glGetUniformLocation(programTex, "spotlightColorLocals"), spotlightColorLocals.x, spotlightColorLocals.y, spotlightColorLocals.z);
+
 	Core::SetActiveTexture(textureID, "colorTexture", programTex, 0);
 	if(normalmapId)  {
 		Core::SetActiveTexture(normalmapId, "normalSampler", programTex, 1);
@@ -184,7 +199,12 @@ void renderScene(GLFWwindow* window)
 	glm::mat4 transformation;
 
 	float time = glfwGetTime();
+	//float localsSpeed = abs(sin(time * 2))*10;
+	if (round(localsSpeed) == 100) {
+		localsSpeed = -100;
+	}
 
+	localsSpeed += 0.2;
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, spaceshipDir));
@@ -215,10 +235,16 @@ void renderScene(GLFWwindow* window)
 		texturesNormal::spaceship
 	);
 
-	/*drawObjectColor(models::honda,
-		glm::translate(glm::vec3(2.f, 2.93f, 0.f)),
-		glm::vec3(0.5, 0.5, 0.5)
-	);*/
+	drawObjectTexture(models::honda,
+		glm::translate(glm::vec3(1.f, 0, localsSpeed)),
+		textures::honda,
+		texturesNormal::spaceship
+	);
+	drawObjectTexture(models::tree,
+		glm::translate(glm::vec3(1.f, 0, 0)),
+		textures::tree,
+		texturesNormal::spaceship
+	);
 	const float wallWidth = 8.f;
 	for (int i = -3; i <= 3; i++) {
 		drawObjectPBR(models::wall,
@@ -250,14 +276,16 @@ void renderScene(GLFWwindow* window)
 
 		lightConeDir[positionIndex] = glm::vec4(1.f, 0.f, 0.f, 0.f) * glm::eulerAngleXYZ(0.5f, 3.f, -1.5f);
 		positionIndex++;
-		/*drawObjectTexture(models::lamp,
+		/*drawObjectTexture(models::tree,
 			glm::translate(glm::vec3(-2.f, 0, lampGap * i)) * glm::eulerAngleY(3.f),
-			textures::lamp
+			textures::tree
 		);*/
 
 	}
-	spotlightPos = spaceshipPos + 0.2 * spaceshipDir;
+	spotlightPos = spaceshipPos + glm::vec3(0, 1, 0) + 0.3 * spaceshipDir;
+	spotlightPosLocals = glm::vec3(1.f, 0, localsSpeed) + glm::vec3(0, 1, 0.6);
 	spotlightConeDir = spaceshipDir;
+	spotlightConeDirLocals = glm::vec3(glm::eulerAngleY(-1.6) * glm::vec4(glm::vec3(1.f, 0.f, 0.f),0));
 
 	glUseProgram(0);
 	glfwSwapBuffers(window);
@@ -310,16 +338,18 @@ void processInput(GLFWwindow* window)
 		spaceshipPos += spaceshipSide * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
 		spaceshipPos -= spaceshipSide * moveSpeed;
+	/*
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		spaceshipPos += spaceshipUp * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 		spaceshipPos -= spaceshipUp * moveSpeed;
+	*/
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		spaceshipDir = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(spaceshipDir, 0));
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		spaceshipDir = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(spaceshipDir, 0));
 
-	cameraPos = spaceshipPos - 1.5 * spaceshipDir + glm::vec3(0, 1, 0) * 0.5f;
+	cameraPos = spaceshipPos - 4 * spaceshipDir + glm::vec3(0, 5, 0) * 0.5f;
 	cameraDir = spaceshipDir;
 
 	//cameraDir = glm::normalize(-cameraPos);

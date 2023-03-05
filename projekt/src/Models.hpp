@@ -10,6 +10,7 @@ namespace models
 	Core::RenderContext honda;
 	Core::RenderContext wall;
 	Core::RenderContext lamp;
+	Core::RenderContext tree;
 }
 
 namespace textures
@@ -20,6 +21,7 @@ namespace textures
 	GLuint spaceship;
 	GLuint honda;
 	GLuint lamp;
+	GLuint tree;
 	GLuint clouds;
 }
 namespace texturesNormal
@@ -105,7 +107,7 @@ void loadGround() {
 }
 
 void loadSpaceship() {
-	loadModelToContext("./models/spaceship.obj", models::spaceship);
+	loadModelToContext("./models/jeep/Jeep_Willys.obj", models::spaceship);
 	textures::spaceship = Core::LoadTexture("textures/carbon.jpeg");
 	texturesNormal::spaceship = Core::LoadTexture("textures/normals/test_normals.png");
 }
@@ -114,9 +116,15 @@ void loadDefault() {
 }
 
 void loadHonda() {
-	loadModelToContext("./models/dodgechallengerdemonPannel.obj", models::honda);
-	//textures::honda = Core::LoadTexture("textures/ground.png");
+	loadModelToContext("./models/jeep/Jeep_Willys.obj", models::honda);
+	textures::honda = Core::LoadTexture("textures/carbon.jpeg");
 }
+
+void loadTree() {
+	loadModelToContext("./models/tree/tree.obj", models::tree);
+	textures::tree = Core::LoadTexture("./models/tree/texture.png");
+}
+
 void loadWall() {
 	loadModelToContext("./models/wall.obj", models::wall);
 	textures::wall = Core::LoadTexture("./textures/wall/albedo.png");
