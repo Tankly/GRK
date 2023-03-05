@@ -6,7 +6,7 @@ namespace models
 {
 	Core::RenderContext skybox;
 	Core::RenderContext ground;
-	Core::RenderContext spaceship;
+	Core::RenderContext jeep;
 	Core::RenderContext honda;
 	Core::RenderContext wall;
 	Core::RenderContext lamp;
@@ -18,7 +18,7 @@ namespace textures
 	GLuint skybox;
 	GLuint ground;
 	GLuint wall;
-	GLuint spaceship;
+	GLuint jeep;
 	GLuint honda;
 	GLuint lamp;
 	GLuint tree;
@@ -26,25 +26,32 @@ namespace textures
 }
 namespace texturesNormal
 {
-	GLuint spaceship;
+	GLuint jeep;
 	GLuint ground;
 	GLuint wall;
+	GLuint tree;
 	GLuint default;
 }
 namespace texturesMetallic
 {
+	GLuint jeep;
 	GLuint ground;
 	GLuint wall;
+	GLuint tree;
 }
 namespace texturesRoughness
 {
+	GLuint jeep;
 	GLuint ground;
 	GLuint wall;
+	GLuint tree;
 }
 namespace texturesAO
 {
+	GLuint jeep;
 	GLuint ground;
 	GLuint wall;
+	GLuint tree;
 }
 
 void loadModelToContext(std::string path, Core::RenderContext& context)
@@ -106,23 +113,26 @@ void loadGround() {
 	texturesMetallic::ground = Core::LoadTexture("./textures/ground/metallic.png");
 }
 
-void loadSpaceship() {
-	loadModelToContext("./models/jeep/Jeep_Willys.obj", models::spaceship);
-	textures::spaceship = Core::LoadTexture("textures/carbon.jpeg");
-	texturesNormal::spaceship = Core::LoadTexture("textures/normals/test_normals.png");
+void loadJeep() {
+	loadModelToContext("./models/jeep/Jeep_Willys.obj", models::jeep);
+	textures::jeep = Core::LoadTexture("./textures/jeep/albedo.png");
+	texturesNormal::jeep = Core::LoadTexture("./textures/jeep/normal.png");
+	texturesRoughness::jeep = Core::LoadTexture("./textures/jeep/roughness.png");
+	texturesAO::jeep = Core::LoadTexture("./textures/jeep/ao.png");
+	texturesMetallic::jeep = Core::LoadTexture("./textures/jeep/metallic.png");
 }
 void loadDefault() {
 	texturesNormal::default = Core::LoadTexture("textures/normals/default_normals.jpg");
 }
 
-void loadHonda() {
-	loadModelToContext("./models/jeep/Jeep_Willys.obj", models::honda);
-	textures::honda = Core::LoadTexture("textures/carbon.jpeg");
-}
 
 void loadTree() {
 	loadModelToContext("./models/tree/tree.obj", models::tree);
-	textures::tree = Core::LoadTexture("./models/tree/texture.png");
+	textures::tree = Core::LoadTexture("./models/tree/albedo.png");
+	texturesNormal::tree = Core::LoadTexture("./textures/tree/normal.png");
+	texturesRoughness::tree = Core::LoadTexture("./textures/tree/roughness.png");
+	texturesAO::tree = Core::LoadTexture("./textures/tree/ao.png");
+	texturesMetallic::tree = Core::LoadTexture("./textures/tree/metallic.png");
 }
 
 void loadWall() {
@@ -143,9 +153,8 @@ void initLoadModels()
 {
 	loadSkybox();
 	loadGround();
-	loadSpaceship();
+	loadJeep();
 	loadWall();
-	loadHonda();
 	loadLamp();
 	loadDefault();
 	loadTree();

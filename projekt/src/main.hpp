@@ -229,16 +229,22 @@ void renderScene(GLFWwindow* window)
 		texturesAO::ground,
 		texturesNormal::ground
 	);
-	drawObjectTexture(models::spaceship,
+	drawObjectPBR(models::jeep,
 		glm::translate(spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()),
-		textures::spaceship,
-		texturesNormal::spaceship
+		textures::jeep,
+		texturesRoughness::jeep,
+		texturesMetallic::jeep,
+		texturesAO::jeep,
+		texturesNormal::jeep
 	);
 
-	drawObjectTexture(models::honda,
+	drawObjectPBR(models::jeep,
 		glm::translate(glm::vec3(1.f, 0, localsSpeed)),
-		textures::honda,
-		texturesNormal::spaceship
+		textures::jeep,
+		texturesRoughness::jeep,
+		texturesMetallic::jeep,
+		texturesAO::jeep,
+		texturesNormal::jeep
 	);
 	const float wallWidth = 8.f;
 	for (int i = -3; i <= 3; i++) {
@@ -271,9 +277,13 @@ void renderScene(GLFWwindow* window)
 
 		lightConeDir[positionIndex] = glm::vec4(1.f, 0.f, 0.f, 0.f) * glm::eulerAngleXYZ(0.5f, 3.f, -1.5f);
 		positionIndex++;
-		drawObjectTexture(models::tree,
-			glm::translate(glm::vec3(-2.f, 0, lampGap * i)) * glm::eulerAngleY(3.f),
-			textures::tree
+		drawObjectPBR(models::tree,
+			glm::translate(glm::vec3(-2.f, 0, lampGap * i)),
+			textures::tree,
+			texturesRoughness::tree,
+			texturesMetallic::tree,
+			texturesAO::tree,
+			texturesNormal::tree
 		);
 
 	}
