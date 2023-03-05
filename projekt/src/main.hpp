@@ -41,12 +41,9 @@ glm::vec3 lightColor = glm::vec3(1, 1, 0.8)*0.3;
 glm::vec3 spotlightPos = glm::vec3(0, 0, 0);
 glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
 
-glm::vec3 spotlightPosLocals = glm::vec3(0, 0, 0);
-glm::vec3 spotlightConeDirLocals = glm::vec3(0, 0, 0);
 
 // 2 - moc �wiat�a
 glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8)*0.5;
-glm::vec3 spotlightColorLocals = glm::vec3(0.5, 0.9, 0.8) * 2;
 
 
 GLuint VAO,VBO;
@@ -117,9 +114,6 @@ void drawObjectPBR(
 	glUniform3f(glGetUniformLocation(programPBR, "spotlightPos"), spotlightPos.x, spotlightPos.y, spotlightPos.z);
 	glUniform3f(glGetUniformLocation(programPBR, "spotlightColor"), spotlightColor.x, spotlightColor.y, spotlightColor.z);
 
-	glUniform3f(glGetUniformLocation(programTex, "spotlightConeDirLocals"), spotlightConeDirLocals.x, spotlightConeDirLocals.y, spotlightConeDirLocals.z);
-	glUniform3f(glGetUniformLocation(programTex, "spotlightPosLocals"), spotlightPosLocals.x, spotlightPosLocals.y, spotlightPosLocals.z);
-	glUniform3f(glGetUniformLocation(programTex, "spotlightColorLocals"), spotlightColorLocals.x, spotlightColorLocals.y, spotlightColorLocals.z);
 
 	Core::SetActiveTexture(textureID, "albedoMap", programPBR, 0);
 	if (normalmapId) {
@@ -152,9 +146,6 @@ void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLui
 	glUniform3f(glGetUniformLocation(programTex, "spotlightPos"), spotlightPos.x, spotlightPos.y, spotlightPos.z);
 	glUniform3f(glGetUniformLocation(programTex, "spotlightColor"), spotlightColor.x, spotlightColor.y, spotlightColor.z);
 
-	glUniform3f(glGetUniformLocation(programTex, "spotlightConeDirLocals"), spotlightConeDirLocals.x, spotlightConeDirLocals.y, spotlightConeDirLocals.z);
-	glUniform3f(glGetUniformLocation(programTex, "spotlightPosLocals"), spotlightPosLocals.x, spotlightPosLocals.y, spotlightPosLocals.z);
-	glUniform3f(glGetUniformLocation(programTex, "spotlightColorLocals"), spotlightColorLocals.x, spotlightColorLocals.y, spotlightColorLocals.z);
 
 	Core::SetActiveTexture(textureID, "colorTexture", programTex, 0);
 	if(normalmapId)  {
@@ -204,7 +195,7 @@ void renderScene(GLFWwindow* window)
 		localsSpeed = -100;
 	}
 
-	localsSpeed += 0;
+	localsSpeed += 0.2;
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, spaceshipDir));
@@ -288,9 +279,9 @@ void renderScene(GLFWwindow* window)
 
 	}
 	spotlightPos = spaceshipPos + glm::vec3(0, 1, 0) + 0.3 * spaceshipDir;
-	spotlightPosLocals = glm::vec3(1.f, 0, localsSpeed) + glm::vec3(0, 1, 0.6);
+	//spotlightPosLocals = glm::vec3(1.f, 0, localsSpeed) + glm::vec3(0, 1, 0.6);
 	spotlightConeDir = spaceshipDir;
-	spotlightConeDirLocals = glm::vec3(glm::eulerAngleY(-1.6) * glm::vec4(glm::vec3(1.f, 0.f, 0.f),0));
+	//spotlightConeDirLocals = glm::vec3(glm::eulerAngleY(-1.6) * glm::vec4(glm::vec3(1.f, 0.f, 0.f),0));
 
 	glUseProgram(0);
 	glfwSwapBuffers(window);

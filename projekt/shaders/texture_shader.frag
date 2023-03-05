@@ -9,11 +9,11 @@ uniform vec3 lightPos[20];
 uniform vec3 cameraPos;
 
 uniform vec3 spotlightPos;
-uniform vec3 spotlightPosLocals;
+
 uniform vec3 spotlightColor;
-uniform vec3 spotlightColorLocals;
+
 uniform vec3 spotlightConeDir;
-uniform vec3 spotlightConeDirLocals;
+
 
 
 uniform sampler2D colorTexture;
@@ -25,7 +25,7 @@ in vec2 vecTex;
 in vec3 worldPos;
 
 in vec3 spotlightDir;
-in vec3 spotlightDirLocals;
+
 //wektor prostopadly do powierzchni wierzcholka
 in vec3 vecNormal;
 
@@ -33,7 +33,7 @@ in vec3 vecNormal;
 in vec3 viewDirTS;
 in vec3 lightDirTS[20];
 in vec3 spotlightDirTS;
-in vec3 spotlightDirTSLocals;
+
 
 //jak bardzo domyslnie widoczne sa elementy
 const float AMBIENT_STRENGTH = 0.5;
@@ -82,12 +82,6 @@ void main()
     lColor = spotlightColor/pow(distanceFromSpaceshipLight,2)*angleAtenuation;
 	ilumination+=phongLight(spotlightDirTS,lColor,normal,viewDirTS)*textureColor;
 
-    //JEEP LOCALS LIGHTS
-    vec3 spotlightDirLocals= normalize(spotlightPosLocals-worldPos);
-	float angleAtenuationLocals = clamp((dot(-spotlightDirLocals,spotlightConeDirLocals)-0.8)*3,0,1);
-    float distanceFromSpaceshipLightLocals = length(spotlightPosLocals-worldPos);
-    lColor = spotlightColor/pow(distanceFromSpaceshipLightLocals,2)*angleAtenuationLocals;
-	ilumination+=phongLight(spotlightDirTSLocals,lColor,normal,viewDirTS)*textureColor;
 
     //WORLD
     //vec3 lightConeDir = vec3(0.2f,1.3f, 0.f);
