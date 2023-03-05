@@ -98,7 +98,7 @@ void loadSkybox()
 }
 
 void loadGround() {
-	loadModelToContext("./models/podloga.obj", models::ground);
+	loadModelToContext("./models/ground.obj", models::ground);
 	textures::ground = Core::LoadTexture("./textures/ground/albedo.png");
 	texturesNormal::ground = Core::LoadTexture("./textures/ground/normal.png");
 	texturesRoughness::ground = Core::LoadTexture("./textures/ground/roughness.png");
