@@ -8,6 +8,7 @@ namespace models
 	Core::RenderContext ground;
 	Core::RenderContext spaceship;
 	Core::RenderContext honda;
+	Core::RenderContext wall;
 	Core::RenderContext lamp;
 }
 
@@ -15,12 +16,33 @@ namespace textures
 {
 	GLuint skybox;
 	GLuint ground;
+	GLuint wall;
 	GLuint spaceship;
 	GLuint honda;
 	GLuint lamp;
 	GLuint clouds;
-	GLuint normals_spaceship;
-	GLuint normals_default;
+}
+namespace texturesNormal
+{
+	GLuint spaceship;
+	GLuint ground;
+	GLuint wall;
+	GLuint default;
+}
+namespace texturesMetallic
+{
+	GLuint ground;
+	GLuint wall;
+}
+namespace texturesRoughness
+{
+	GLuint ground;
+	GLuint wall;
+}
+namespace texturesAO
+{
+	GLuint ground;
+	GLuint wall;
 }
 
 void loadModelToContext(std::string path, Core::RenderContext& context)
@@ -75,21 +97,33 @@ void loadSkybox()
 
 void loadGround() {
 	loadModelToContext("./models/podloga.obj", models::ground);
-	textures::ground = Core::LoadTexture("./textures/ground.jpg");
+	textures::ground = Core::LoadTexture("./textures/ground/albedo.png");
+	texturesNormal::ground = Core::LoadTexture("./textures/ground/normal.png");
+	texturesRoughness::ground = Core::LoadTexture("./textures/ground/roughness.png");
+	texturesAO::ground = Core::LoadTexture("./textures/ground/ao.png");
+	texturesMetallic::ground = Core::LoadTexture("./textures/ground/metallic.png");
 }
 
 void loadSpaceship() {
 	loadModelToContext("./models/spaceship.obj", models::spaceship);
 	textures::spaceship = Core::LoadTexture("textures/carbon.jpeg");
-	textures::normals_spaceship = Core::LoadTexture("textures/normals/test_normals.png");
+	texturesNormal::spaceship = Core::LoadTexture("textures/normals/test_normals.png");
 }
 void loadDefault() {
-	textures::normals_default = Core::LoadTexture("textures/normals/default_normals.jpg");
+	texturesNormal::default = Core::LoadTexture("textures/normals/default_normals.jpg");
 }
 
 void loadHonda() {
-	loadModelToContext("./models/Sol_Gauntlet_GRS_Rally.obj", models::honda);
+	loadModelToContext("./models/dodgechallengerdemonPannel.obj", models::honda);
 	//textures::honda = Core::LoadTexture("textures/ground.png");
+}
+void loadWall() {
+	loadModelToContext("./models/wall.obj", models::wall);
+	textures::wall = Core::LoadTexture("./textures/wall/albedo.png");
+	texturesNormal::wall = Core::LoadTexture("./textures/wall/normal.png");
+	texturesRoughness::wall = Core::LoadTexture("./textures/wall/roughness.png");
+	texturesAO::wall = Core::LoadTexture("./textures/wall/ao.png");
+	texturesMetallic::wall = Core::LoadTexture("./textures/wall/metallic.png");
 }
 void loadLamp() {
 	loadModelToContext("./models/street_lamp.obj", models::lamp);
@@ -102,6 +136,7 @@ void initLoadModels()
 	loadSkybox();
 	loadGround();
 	loadSpaceship();
+	loadWall();
 	loadHonda();
 	loadLamp();
 	loadDefault();

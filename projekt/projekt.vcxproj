@@ -38,12 +38,12 @@
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\shader_5_1.frag" />
-    <None Include="shaders\shader_5_1.vert" />
     <None Include="shaders\shader_5_1_tex.frag" />
     <None Include="shaders\shader_5_1_tex.vert" />
     <None Include="shaders\shader_skybox.frag" />
     <None Include="shaders\shader_skybox.vert" />
+    <None Include="main_shader.frag" />
+    <None Include="main_shader.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{61FEFB67-5A6C-45F7-8542-5965C01A6CEF}</ProjectGuid>
