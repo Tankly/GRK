@@ -41,11 +41,11 @@ in vec3 spotlightDirTS;
 const float AMBIENT_STRENGTH = 0.05;
 //intensywnosc odblyskow
 const float SPECULAR_STRENGTH = 0.2;
-//parametr ekspozycji
+//parametr ekspozycji - tone mapping
 const float EXPOSITION = 122.0f;
 const float PI = 3.14;
 const float MULTIPLIER = 15;
-
+// Normal distribution function przybliża ilość powierzchni, która jest ustawiona prostopadle do wektora połówkowego korzystamy z funkcji Trowbridge-Reitz GGX
 float DistributionGGX(vec3 normal, vec3 H, float roughness){
     float a      = roughness*roughness;
     float a2     = a*a;
@@ -58,6 +58,7 @@ float DistributionGGX(vec3 normal, vec3 H, float roughness){
 	
     return num / denom;
 }
+// G - Geometry function opisuje stopień samo-zacieninienia. Wykorzystujemy Schlick-GGX
 float GeometrySchlickGGX(float NdotV, float roughness){
     float r = (roughness + 1.0);
     float k = (r*r) / 8.0;
@@ -75,6 +76,7 @@ float GeometrySmith(vec3 normal, vec3 V, vec3 lightDir, float roughness){
 	
     return ggx1 * ggx2;
 }
+// F - Fresnel equation opisuje stopień odbicia w zależności od kąta padania. Wykorzystujemy aproksymację Fresnela-Schlicka
 // stopień odbicia w zależności od kąta padania
 vec3 fresnelSchlick(float cosTheta, vec3 F0){
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
@@ -82,9 +84,11 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0){
 vec3 PBRLight(vec3 lightDir, vec3 radiance, vec3 normal, vec3 V, vec3 color){
     float metallic  = texture(metallicMap, vecTex*MULTIPLIER).r;
     float roughness = texture(roughnessMap, vecTex*MULTIPLIER).r;
+    // światło rozproszone 
 	float diffuse=max(0,dot(normal,lightDir));
 
 	vec3 F0 = vec3(0.04); 
+    // wałsność materiału
     F0 = mix(F0, color, metallic);
 
     vec3 H = normalize(V + lightDir);    
@@ -100,6 +104,7 @@ vec3 PBRLight(vec3 lightDir, vec3 radiance, vec3 normal, vec3 V, vec3 color){
            
         vec3 numerator    = NDF * G * F; 
         float denominator = 4.0 * max(dot(normal, V), 0.0) * max(dot(normal, lightDir), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+        // światło kierunkowe
         vec3 specular = numerator / denominator;
         
         // kS is equal to Fresnel
@@ -124,6 +129,7 @@ vec3 PBRLight(vec3 lightDir, vec3 radiance, vec3 normal, vec3 V, vec3 color){
 
 void main()
 {
+    // jak pada światło w szczeliny
     float ao = texture(aoMap, vecTex*MULTIPLIER).r;
     vec3 normal = vec3(0,0,1);
     //oświetlenie
@@ -132,6 +138,7 @@ void main()
     vec3 lColor;
 
     vec3 textureColor = texture(albedoMap, vecTex*MULTIPLIER).xyz;
+    // sztuczne zagłębienia
     normal = texture(normalMap, vecTex*MULTIPLIER).xyz;
     //przekształcenie na [−1,1]
     normal = normalize(normal*2-1);
@@ -163,9 +170,6 @@ void main()
     //Tone mapping - Osłabienia światła przy większej odległośći
     vec3 toneMappingColor = 1.0 - exp(-ilumination*EXPOSITION);
     toneMappingColor = toneMappingColor+ambient;
-    // HDR tonemapping
-    //toneMappingColor = toneMappingColor / (toneMappingColor + vec3(1.0));
-    // gamma correct
-    //toneMappingColor = pow(toneMappingColor, vec3(1.0/2.2)); 
+    // kolor wyjściowy
 	out_color = vec4(toneMappingColor,1);
 }

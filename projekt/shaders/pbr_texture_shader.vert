@@ -35,7 +35,7 @@ void main()
 	//do przestrzeni �wiata
 	vec3 worldTangent = normalize(mat3(modelMatrix)*vertexTangent);
 	vec3 worldBitangent = normalize(mat3(modelMatrix)*vertexBitangent);
-
+	// styczne
 	mat3 TBN = transpose(mat3(worldTangent, worldBitangent, vecNormal));
 	for(int i=0;i<20;i++){
 		//wektor kierunku miedzy zrodlem swiatla a pozycja fragmentu
@@ -45,7 +45,7 @@ void main()
 	}
     //wektor kierunku widoku/ kierunek patrzeniaw
     vec3 viewDir = normalize(cameraPos - worldPos);
-	//wektor kierunku miedzy statkiem a pozycja fragmentu
+	//wektor kierunku miedzy jeepem a pozycja fragmentu
 	vec3 spotlightDir = normalize(spotlightPos-worldPos);
 
 	//przeniesienie do przestrzeni stycznych

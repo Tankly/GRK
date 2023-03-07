@@ -95,7 +95,7 @@ void loadSkybox()
 			std::cout << "Failed to load texture: " << filepaths[i] << std::endl;
 		}
 	}
-
+	// parametry opisuj¹ce zachowanie tekstury
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -103,7 +103,7 @@ void loadSkybox()
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 }
-
+ // ao wspó³czynnik cieniowania powierzchni (okresla przyciemniane krawedzi)
 void loadGround() {
 	loadModelToContext("./models/ground.obj", models::ground);
 	textures::ground = Core::LoadTexture("./textures/ground/albedo.png");

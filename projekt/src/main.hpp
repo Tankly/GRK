@@ -19,10 +19,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
-GLuint program;
 GLuint programTex;
 GLuint programSkybox;
-GLuint programSpecTexture;
 GLuint programPBR;
 
 Core::Shader_Loader shaderLoader;
@@ -54,6 +52,7 @@ float localsSpeed = 0;
 
 glm::mat4 createCameraMatrix()
 {
+	// orientacja kamery up - Y, dir - Z, side - X
 	glm::vec3 cameraSide = glm::normalize(glm::cross(cameraDir,glm::vec3(0.f,1.f,0.f)));
 	glm::vec3 cameraUp = glm::normalize(glm::cross(cameraSide,cameraDir));
 	glm::mat4 cameraRotrationMatrix = glm::mat4({
@@ -89,7 +88,7 @@ glm::mat4 createPerspectiveMatrix()
 	return perspectiveMatrix;
 }
 
-
+// Physically based rendering - funkcja przekazując dane do shaderów vert i farg na podane zmienne 
 void drawObjectPBR(
 	Core::RenderContext& context,
 	glm::mat4 modelMatrix,
@@ -158,18 +157,6 @@ void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLui
 	glUseProgram(0);
 }
 
-void drawObject(Core::RenderContext context, glm::mat4 modelMatrix)
-{
-	glUseProgram(programSpecTexture);
-	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
-	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
-
-
-	glUniformMatrix4fv(glGetUniformLocation(programSpecTexture, "modelMatrix"), 1, GL_FALSE, (float*)&modelMatrix);
-	glUniformMatrix4fv(glGetUniformLocation(programSpecTexture, "transformation"), 1, GL_FALSE, (float*)&transformation);
-	Core::DrawContext(context);
-}
-
 
 void renderSkybox(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint textureID)
 {
@@ -189,8 +176,6 @@ void renderScene(GLFWwindow* window)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 transformation;
 
-	float time = glfwGetTime();
-	//float localsSpeed = abs(sin(time * 2))*10;
 	if (round(localsSpeed) == 100) {
 		localsSpeed = -100;
 	}
@@ -279,9 +264,7 @@ void renderScene(GLFWwindow* window)
 
 	}
 	spotlightPos = spaceshipPos + glm::vec3(0, 1, 0) + 0.3 * spaceshipDir;
-	//spotlightPosLocals = glm::vec3(1.f, 0, localsSpeed) + glm::vec3(0, 1, 0.6);
 	spotlightConeDir = spaceshipDir;
-	//spotlightConeDirLocals = glm::vec3(glm::eulerAngleY(-1.6) * glm::vec4(glm::vec3(1.f, 0.f, 0.f),0));
 
 	glUseProgram(0);
 	glfwSwapBuffers(window);
@@ -301,9 +284,7 @@ void init(GLFWwindow* window)
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glEnable(GL_DEPTH_TEST);
-	program = shaderLoader.CreateProgram("shaders/main_shader.vert", "shaders/main_shader.frag");
 	programTex = shaderLoader.CreateProgram("shaders/texture_shader.vert", "shaders/texture_shader.frag");
-	programSpecTexture = shaderLoader.CreateProgram("shaders/lamp_shader.vert", "shaders/lamp_shader.frag");
 	programSkybox = shaderLoader.CreateProgram("shaders/skybox_shader.vert", "shaders/skybox_shader.frag");
 	programPBR = shaderLoader.CreateProgram("shaders/pbr_texture_shader.vert", "shaders/pbr_texture_shader.frag");
 
@@ -312,7 +293,9 @@ void init(GLFWwindow* window)
 
 void shutdown(GLFWwindow* window)
 {
-	shaderLoader.DeleteProgram(program);
+	shaderLoader.DeleteProgram(programSkybox);
+	shaderLoader.DeleteProgram(programTex);
+	shaderLoader.DeleteProgram(programPBR);
 }
 
 //obsluga wejscia
